@@ -31,16 +31,13 @@ template <typename T, typename U>
 T do_decode(std::vector<uint8_t>::iterator it, VAR_INT) {
     uint64_t data = 0;
     int count = 0;
-    while ((*it >> 7) == 1) {
+    while (true) {
         uint64_t x = (uint64_t)(*it & 0x7f) << (count * 7);
         data |= x;
         count += 1;
+        if ((*it >> 7) == 0) break;
         it += 1;
     }
-    uint64_t x = (uint64_t)(*it & 0x7f) << (count * 7);
-    data |= x;
-    count += 1;
-    it += 1;
     if (is_zigzag<U>::value) {
         return (T)((data >> 1) ^ - (data & 1));
     } else {
@@ -110,6 +107,6 @@ int main() {
     encode<int32_t, SINT_32>(byte_array.begin(), data);
     data = decode<int32_t, SINT_32>(byte_array.begin());
     std::cout << data << "\n";
-    
+
     return 0;
 }
