@@ -15,13 +15,13 @@
     ENTRY(SFIXED_64, 9)\
     ENTRY(DOUBLE, 10)
 
-#define List_Of_BITS_32_Types \
+#define List_Of_LENGTH_DELIMITED_Types \
     ENTRY(BYTES, 11)\
     ENTRY(STRING, 12)\
     ENTRY(EMBEDDED_MESSAGES, 13)\
     ENTRY(PACKED_REPEATED_FIELDS, 14)
 
-#define List_Of_LENGTH_DELIMITED_Types \
+#define List_Of_BITS_32_Types \
     ENTRY(FIXED_32, 15)\
     ENTRY(SFIXED_32, 16)\
     ENTRY(FLOAT, 17)
@@ -35,11 +35,11 @@
 #define List_Of_Wire_Types \
     ENTRY(VAR_INT, 0) \
     ENTRY(BITS_64, 1)\
-    ENTRY(BITS_32, 2)\
-    ENTRY(LENGTH_DELIMITED, 3)
+    ENTRY(LENGTH_DELIMITED, 2)\
+    ENTRY(BITS_32, 5)
 
 // define struct
-#define ENTRY(t, v) struct t {}; 
+#define ENTRY(t, v) struct t { static const uint8_t wire_type_value = v;}; 
     List_Of_Wire_Types
 #undef ENTRY
 
@@ -67,7 +67,7 @@
     List_Of_LENGTH_DELIMITED_Types
 #undef ENTRY
 
-//
+
 #define ENTRY(t, v) std::string as_str(t ty) {return #t;} \
     List_Of_Origin_Types \
     List_Of_Wire_Types
