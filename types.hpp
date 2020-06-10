@@ -1,3 +1,6 @@
+#ifndef TYPES_HPP
+#define TYPES_HPP
+
 #include <iostream>
 
 #define List_Of_VAR_INT_Types \
@@ -34,7 +37,7 @@
 
 #define List_Of_Wire_Types \
     ENTRY(VAR_INT, 0) \
-    ENTRY(BITS_64, 1)\
+    ENTRY(BITS_64, 1) \
     ENTRY(LENGTH_DELIMITED, 2)\
     ENTRY(BITS_32, 5)
 
@@ -94,3 +97,5 @@ template <typename T>
 struct wire_type_trait {
     typedef typename T::wire_type wire_type;
 };
+
+#endif
