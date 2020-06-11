@@ -172,6 +172,7 @@ class Iteratorable<T, U, N>{
         }
 };
 
+// TODO: add key information into serialization
 class A {
     public:
         int32_t a;
@@ -208,13 +209,13 @@ class B {
         int32_t c;
         B() {}
         size_t do_pack_size() const {
-            size_t body_size = pack_size<A, EMBEDDED_MESSAGES>(a) + pack_size<int32_t, INT_32>(b) + pack_size<int32_t, INT_32>(c);
+            size_t body_size = pack_size<A, MESSAGE>(a) + pack_size<int32_t, INT_32>(b) + pack_size<int32_t, INT_32>(c);
             size_t head_size = pack_size<size_t, INT_32>(body_size);
             return head_size + body_size;
         }
 
         size_t do_pack(uint8_t* buf) const {
-            size_t body_size = pack<A, EMBEDDED_MESSAGES>(buf, a);
+            size_t body_size = pack<A, MESSAGE>(buf, a);
             body_size += pack<int32_t, INT_32>(buf + body_size, b);
             body_size += pack<int32_t, INT_32>(buf + body_size, c);
             size_t head_size = pack<size_t, INT_32>(buf + body_size, body_size);
@@ -222,7 +223,7 @@ class B {
         }
 
         size_t do_unpack(uint8_t* buf) {
-            size_t body_size = unpack<A, EMBEDDED_MESSAGES>(buf, a);
+            size_t body_size = unpack<A, MESSAGE>(buf, a);
             body_size += unpack<int32_t, INT_32>(buf + body_size, b);
             body_size += unpack<int32_t, INT_32>(buf + body_size, c);
             size_t head_size = unpack<size_t, INT_32>(buf + body_size, body_size);
@@ -299,12 +300,12 @@ int main() {
     data4.a = 10;
     data4.b = 15;
     data4.c = 20;
-    ps = pack_size<A, EMBEDDED_MESSAGES>(data4);
+    ps = pack_size<A, MESSAGE>(data4);
     std::cout << "pack_size: " << ps << "\n";
     uint8_t* buf4 = new uint8_t[ps];
-    pack<A, EMBEDDED_MESSAGES>(buf4, data4);
+    pack<A, MESSAGE>(buf4, data4);
     // unpack
-    unpack<A, EMBEDDED_MESSAGES>(buf4, data4);
+    unpack<A, MESSAGE>(buf4, data4);
     std::cout << data4.a << "\n";
     std::cout << data4.b << "\n";
     std::cout << data4.c << "\n";
@@ -319,12 +320,12 @@ int main() {
     data5.a = a;
     data5.b = 15;
     data5.c = 20;
-    ps = pack_size<B, EMBEDDED_MESSAGES>(data5);
+    ps = pack_size<B, MESSAGE>(data5);
     std::cout << "pack_size: " << ps << "\n";
     uint8_t* buf5 = new uint8_t[ps];
-    pack<B, EMBEDDED_MESSAGES>(buf5, data5);
+    pack<B, MESSAGE>(buf5, data5);
     // unpack
-    unpack<B, EMBEDDED_MESSAGES>(buf5, data5);
+    unpack<B, MESSAGE>(buf5, data5);
     std::cout << data5.a.a << "\n";
     std::cout << data5.a.b << "\n";
     std::cout << data5.a.c << "\n";
@@ -339,12 +340,12 @@ int main() {
     data6.a.data[2] = 15;
     data6.a.data[3] = 20;
     data6.b = 40;
-    ps = pack_size<C, EMBEDDED_MESSAGES>(data6);
+    ps = pack_size<C, MESSAGE>(data6);
     std::cout << "pack_size: " << ps << "\n";
     uint8_t* buf6 = new uint8_t[ps];
-    pack<C, EMBEDDED_MESSAGES>(buf6, data6);
+    pack<C, MESSAGE>(buf6, data6);
     // unpack
-    unpack<C, EMBEDDED_MESSAGES>(buf6, data6);
+    unpack<C, MESSAGE>(buf6, data6);
     std::cout << data6.a.data[0] << "\n";
     std::cout << data6.a.data[1] << "\n";
     std::cout << data6.a.data[2] << "\n";
