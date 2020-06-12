@@ -8,37 +8,46 @@
 
 using namespace navi_trans;
 class A {
+    // add key version
     public:
         int32_t a;
         int32_t b;
         int32_t c;
         A() {}
         size_t do_pack_size() const {
-            size_t payload_size = pack_size<int32_t, INT_32>(a);
+            size_t payload_size = pack_size<uint32_t, INT_32>(generate_key<INT_32>(0));
+            payload_size += pack_size<int32_t, INT_32>(a);
+            payload_size += pack_size<uint32_t, INT_32>(generate_key<INT_32>(1));
             payload_size += pack_size<int32_t, INT_32>(b);
+            payload_size += pack_size<uint32_t, INT_32>(generate_key<INT_32>(2));
             payload_size += pack_size<int32_t, INT_32>(c);
-            size_t head_size = pack_size<size_t, INT_32>(payload_size);
-            return head_size + payload_size;
+            return payload_size;
         }
 
         size_t do_pack(uint8_t* buf) const {
-            size_t payload_size = pack<int32_t, INT_32>(buf, a);
+            size_t payload_size = pack_key<INT_32>(buf, 0);
+            payload_size += pack<int32_t, INT_32>(buf + payload_size, a);
+            payload_size += pack_key<INT_32>(buf + payload_size, 1);
             payload_size += pack<int32_t, INT_32>(buf + payload_size, b);
+            payload_size += pack_key<INT_32>(buf + payload_size, 2);
             payload_size += pack<int32_t, INT_32>(buf + payload_size, c);
-            size_t head_size = pack<size_t, INT_32>(buf + payload_size, payload_size);
-            return head_size + payload_size;
+            return payload_size;
         }
 
-        size_t do_unpack(uint8_t* buf) {
-            size_t payload_size = unpack<int32_t, INT_32>(buf, a);
-            payload_size += unpack<int32_t, INT_32>(buf + payload_size, b);
-            payload_size += unpack<int32_t, INT_32>(buf + payload_size, c);
-            size_t head_size = unpack<size_t, INT_32>(buf + payload_size, payload_size);
-            return head_size + payload_size;
+        size_t do_unpack(uint8_t* buf, size_t& payload_size) {
+            uint32_t field_number = 0;
+            size_t offset = unpack_key<INT_32>(buf, field_number);
+            offset += unpack<int32_t, INT_32>(buf + offset, a);
+            offset += unpack_key<INT_32>(buf + offset, field_number);
+            offset += unpack<int32_t, INT_32>(buf + offset, b);
+            offset += unpack_key<INT_32>(buf + offset, field_number);
+            offset += unpack<int32_t, INT_32>(buf + offset, c);
+            return payload_size;
         }
 };
 
 class B {
+    // does not add key version
     public:
         A a;
         int32_t b;
@@ -46,50 +55,44 @@ class B {
         B() {}
         size_t do_pack_size() const {
             size_t payload_size = pack_size<A, MESSAGE>(a) + pack_size<int32_t, INT_32>(b) + pack_size<int32_t, INT_32>(c);
-            size_t head_size = pack_size<size_t, INT_32>(payload_size);
-            return head_size + payload_size;
+            return payload_size;
         }
 
         size_t do_pack(uint8_t* buf) const {
             size_t payload_size = pack<A, MESSAGE>(buf, a);
             payload_size += pack<int32_t, INT_32>(buf + payload_size, b);
             payload_size += pack<int32_t, INT_32>(buf + payload_size, c);
-            size_t head_size = pack<size_t, INT_32>(buf + payload_size, payload_size);
-            return head_size + payload_size;
+            return payload_size;
         }
 
-        size_t do_unpack(uint8_t* buf) {
-            size_t payload_size = unpack<A, MESSAGE>(buf, a);
-            payload_size += unpack<int32_t, INT_32>(buf + payload_size, b);
-            payload_size += unpack<int32_t, INT_32>(buf + payload_size, c);
-            size_t head_size = unpack<size_t, INT_32>(buf + payload_size, payload_size);
-            return head_size + payload_size;
+        size_t do_unpack(uint8_t* buf, size_t& payload_size) {
+            size_t offset = unpack<A, MESSAGE>(buf, a);
+            offset += unpack<int32_t, INT_32>(buf + offset, b);
+            offset += unpack<int32_t, INT_32>(buf + offset, c);
+            return payload_size;
         }
 };
 
 class C {
     public:
-        Iteratorable<int32_t, INT_32, 4> a;
+        Iteratorable<int32_t, INT_32> a;
         int32_t b;
         C() {}
         size_t do_pack_size() const {
-            size_t payload_size = pack_size<Iteratorable<int32_t, INT_32, 4>, ARRAY>(a) + pack_size<int32_t, INT_32>(b);
-            size_t head_size = pack_size<size_t, INT_32>(payload_size);
-            return head_size + payload_size;
+            size_t payload_size = pack_size<Iteratorable<int32_t, INT_32>, ARRAY>(a) + pack_size<int32_t, INT_32>(b);
+            return payload_size;
         }
 
         size_t do_pack(uint8_t* buf) const {
-            size_t payload_size = pack<Iteratorable<int32_t, INT_32, 4>, ARRAY>(buf, a);
+            size_t payload_size = pack<Iteratorable<int32_t, INT_32>, ARRAY>(buf, a);
             payload_size += pack<int32_t, INT_32>(buf + payload_size, b);
-            size_t head_size = pack<size_t, INT_32>(buf + payload_size, payload_size);
-            return head_size + payload_size;
+            return payload_size;
         }
 
-        size_t do_unpack(uint8_t* buf) {
-            size_t payload_size = unpack<Iteratorable<int32_t, INT_32, 4>, ARRAY>(buf, a);
-            payload_size += unpack<int32_t, INT_32>(buf + payload_size, b);
-            size_t head_size = unpack<size_t, INT_32>(buf + payload_size, payload_size);
-            return head_size + payload_size;
+        size_t do_unpack(uint8_t* buf, size_t& payload_size) {
+            size_t offset = unpack<Iteratorable<int32_t, INT_32>, ARRAY>(buf, a);
+            offset += unpack<int32_t, INT_32>(buf + offset, b);
+            return payload_size;
         }
     
 };
@@ -171,28 +174,32 @@ int main() {
 
     // message with array
     C data6;
-    data6.a.data[0] = 5;
-    data6.a.data[1] = 10;
-    data6.a.data[2] = 15;
-    data6.a.data[3] = 20;
+    data6.a.data.push_back(5);
+    data6.a.data.push_back(10);
+    data6.a.data.push_back(15);
+    data6.a.data.push_back(20);
     data6.b = 40;
     ps = pack_size<C, MESSAGE>(data6);
     std::cout << "pack_size: " << ps << "\n";
     uint8_t* buf6 = new uint8_t[ps];
     pack<C, MESSAGE>(buf6, data6);
     // unpack
-    unpack<C, MESSAGE>(buf6, data6);
-    std::cout << data6.a.data[0] << "\n";
-    std::cout << data6.a.data[1] << "\n";
-    std::cout << data6.a.data[2] << "\n";
-    std::cout << data6.a.data[3] << "\n";
-    std::cout << data6.b << "\n";
+    C data6_1;
+    unpack<C, MESSAGE>(buf6, data6_1);
+    std::cout << data6_1.a.data[0] << "\n";
+    std::cout << data6_1.a.data[1] << "\n";
+    std::cout << data6_1.a.data[2] << "\n";
+    std::cout << data6_1.a.data[3] << "\n";
+    std::cout << data6_1.b << "\n";
     delete[] buf6;
 
     // generate_key
     uint8_t* buf7 = new uint8_t[1];
-    pack<uint32_t, INT_32>(buf7, generate_key<MESSAGE>(4));
+    pack_key<MESSAGE>(buf7, 4);
     std::cout << std::hex << +buf7[0] << "\n";
+    uint32_t field_number;
+    unpack_key<MESSAGE>(buf7, field_number);
+    std::cout << field_number<< "\n";
     delete[] buf7;
     return 0;
 }

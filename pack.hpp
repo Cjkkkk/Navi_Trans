@@ -1,6 +1,8 @@
 #ifndef PACK_HPP
 #define PACK_HPP
 
+#include <exception>
+#include <sstream>
 #include "./types.hpp"
 
 namespace navi_trans {
@@ -74,14 +76,18 @@ namespace navi_trans {
 
     template <typename T, typename U>
     size_t do_pack(uint8_t* buf, const T& o_data, LENGTH_DELIMITED) {
-        return o_data.do_pack(buf);
+        size_t payload_size = o_data.do_pack(buf + 4);
+        do_pack<size_t, FIXED_32>(buf, payload_size, BITS_32());
+        return payload_size + 4;
     }
 
     template <typename T, typename U>
     size_t do_unpack(uint8_t* buf, T& o_data, LENGTH_DELIMITED) {
         // o_data = new typename std::remove_pointer<T>::type;
-        size_t s = o_data.do_unpack(buf);
-        return s;
+        size_t payload_size;
+        do_unpack<size_t, FIXED_32>(buf, payload_size, BITS_32());
+        o_data.do_unpack(buf + 4, payload_size);
+        return payload_size + 4;
     }
 
     template <typename T, typename U>
@@ -96,7 +102,7 @@ namespace navi_trans {
     // ------------------
     template <typename T, typename U>
     size_t do_pack_size(const T& o_data, LENGTH_DELIMITED) {
-        return o_data.do_pack_size();
+        return o_data.do_pack_size() + 4;
     }
 
     template <typename T, typename U>
@@ -136,18 +142,17 @@ namespace navi_trans {
     template <typename T, typename U, size_t...>
     class Iteratorable{};
 
-    template <typename T, typename U, size_t N>
-    class Iteratorable<T, U, N>{
+    template <typename T, typename U>
+    class Iteratorable<T, U>{
         public:
-            T data[N];
+            std::vector<T> data;
             Iteratorable() {}
             size_t do_pack_size() const {
                 size_t payload_size = 0;
                 for (auto iter = std::begin(data); iter != std::end(data); ++iter) {
                     payload_size += pack_size<T, U>(*iter);
                 }
-                size_t head_size = pack_size<size_t, INT_32>(payload_size);
-                return head_size + payload_size;
+                return payload_size;
             }
 
             size_t do_pack(uint8_t* buf) const {
@@ -155,30 +160,48 @@ namespace navi_trans {
                 for (auto iter = std::begin(data); iter != std::end(data); ++iter) {
                     payload_size += pack<T, U>(buf + payload_size, *iter);
                 }
-                size_t head_size = pack<size_t, INT_32>(buf + payload_size, payload_size);
-                return head_size + payload_size;
+                return payload_size;
             }
 
-            size_t do_unpack(uint8_t* buf) {
-                size_t payload_size = 0;
-                for (auto iter = std::begin(data); iter != std::end(data); ++iter) {
-                    payload_size += unpack<T, U>(buf + payload_size, *iter);
+            size_t do_unpack(uint8_t* buf, size_t& payload_size) {
+                size_t offset = 0;
+                while(offset < payload_size) {
+                    T t = T();
+                    offset += unpack<T, U>(buf + offset, t);
+                    data.push_back(std::move(t));
                 }
-                size_t head_size = unpack<size_t, INT_32>(buf + payload_size, payload_size);
-                return head_size + payload_size;
+                return payload_size;
             }
     };
 
     template <typename T>
-    uint32_t generate_key(uint32_t field_number) {
+    uint32_t generate_key(const uint32_t& field_number) {
         return (field_number << 3) | wire_type_trait<T>::wire_type::wire_type_value;
     }
 
-    // TODO: add key information into serialization
-    // message len | k | v | k | v ...
-    // array len | v | v | v ...
-    // current message v | v | v | len
-    // current array v | v | v | len
+    template <typename T>
+    size_t pack_key(uint8_t* buf, const uint32_t& field_number) {
+        return pack<uint32_t, INT_32>(buf, generate_key<T>(field_number));
+    }
+
+    template <typename T>
+    size_t unpack_key(uint8_t* buf, uint32_t& field_number) {
+        uint32_t data;
+        uint8_t wire_type_value;
+        size_t size = unpack<uint32_t, INT_32>(buf, data);
+        field_number = data >> 3;
+        wire_type_value = data & 0x7;
+        if (wire_type_value != wire_type_trait<T>::wire_type::wire_type_value) {
+            std::stringstream fmt;
+            fmt << "can not match wire type when unpack, expect " 
+                << +wire_type_trait<T>::wire_type::wire_type_value
+                << ", got "
+                << +wire_type_value;
+            std::cout << fmt.str() << "\n";
+            throw fmt;
+        }
+        return size;
+    }
 }
 
 #endif
