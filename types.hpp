@@ -4,30 +4,30 @@
 #include <iostream>
 
 #define List_Of_VAR_INT_Types \
-    ENTRY(INT_32, 0) \
-    ENTRY(INT_64, 1)\
-    ENTRY(UINT_32, 2)\
-    ENTRY(UINT_64, 3) \
-    ENTRY(SINT_32, 4)\
-    ENTRY(SINT_64, 5)\
-    ENTRY(BOOL, 6)\
-    ENTRY(ENUM, 7)
+    ENTRY(INT_32, 0, int32_t) \
+    ENTRY(INT_64, 1, int64_t)\
+    ENTRY(UINT_32, 2, uint32_t)\
+    ENTRY(UINT_64, 3, uint64_t) \
+    ENTRY(SINT_32, 4, int32_t)\
+    ENTRY(SINT_64, 5, int64_t)\
+    ENTRY(BOOL, 6, bool)\
+    ENTRY(ENUM, 7, void)
 
 #define List_Of_BITS_64_Types \
-    ENTRY(FIXED_64, 8)\
-    ENTRY(SFIXED_64, 9)\
-    ENTRY(DOUBLE, 10)
+    ENTRY(FIXED_64, 8, uint64_t)\
+    ENTRY(SFIXED_64, 9, int64_t)\
+    ENTRY(DOUBLE, 10, double)
 
 #define List_Of_LENGTH_DELIMITED_Types \
-    ENTRY(BYTES, 11)\
-    ENTRY(STRING, 12)\
-    ENTRY(MESSAGE, 13)\
-    ENTRY(ARRAY, 14)
+    ENTRY(BYTES, 11, void)\
+    ENTRY(STRING, 12, void)\
+    ENTRY(MESSAGE, 13, void)\
+    ENTRY(ARRAY, 14, void)
 
 #define List_Of_BITS_32_Types \
-    ENTRY(FIXED_32, 15)\
-    ENTRY(SFIXED_32, 16)\
-    ENTRY(FLOAT, 17)
+    ENTRY(FIXED_32, 15, uint32_t)\
+    ENTRY(SFIXED_32, 16, int32_t)\
+    ENTRY(FLOAT, 17, float)
 
 #define List_Of_Origin_Types \
     List_Of_VAR_INT_Types \
@@ -47,26 +47,30 @@ namespace navi_trans {
         List_Of_Wire_Types
     #undef ENTRY
 
-    #define ENTRY(t, v) struct t { \
+    #define ENTRY(t, v, pt) struct t { \
         typedef VAR_INT wire_type; \
+        typedef pt primitive_type; \
     };
         List_Of_VAR_INT_Types
     #undef ENTRY
 
-    #define ENTRY(t, v) struct t { \
+    #define ENTRY(t, v, pt) struct t { \
         typedef BITS_64 wire_type; \
+        typedef pt primitive_type; \
     };
         List_Of_BITS_64_Types
     #undef ENTRY
 
-    #define ENTRY(t, v) struct t { \
+    #define ENTRY(t, v, pt) struct t { \
         typedef BITS_32 wire_type; \
+        typedef pt primitive_type; \
     };
         List_Of_BITS_32_Types
     #undef ENTRY
 
-    #define ENTRY(t, v) struct t { \
+    #define ENTRY(t, v, pt) struct t { \
         typedef LENGTH_DELIMITED wire_type; \
+        typedef pt primitive_type; \
     };
         List_Of_LENGTH_DELIMITED_Types
     #undef ENTRY
