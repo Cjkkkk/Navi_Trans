@@ -12,6 +12,19 @@ A simple template based tool for serializing structured data.
 * 64 bits
 * length delimited (partial)
 
+## compile
+```
+g++ compiler.cpp -o compiler
+```
+
+## example
+```bash
+cd example
+../compiler .proto.json .
+g++ main.cpp -I ../ -o main
+./main
+```
+
 ## TODO
 * test
 * finish length delimited

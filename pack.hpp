@@ -3,6 +3,10 @@
 
 #include <exception>
 #include <sstream>
+#include <limits>
+#include <vector>
+#include <cstring>
+#include <iostream>
 #include "./types.hpp"
 
 namespace navi_trans {

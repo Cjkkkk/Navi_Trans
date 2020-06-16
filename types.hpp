@@ -1,7 +1,7 @@
 #ifndef TYPES_HPP
 #define TYPES_HPP
 
-#include <iostream>
+#include <cstdint>
 
 #define List_Of_VAR_INT_Types \
     ENTRY(INT_32, 0, int32_t) \
