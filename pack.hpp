@@ -140,13 +140,13 @@ namespace navi_trans {
     }
 
     template <typename T, typename U, size_t...>
-    class Iteratorable{};
+    class Array{};
 
     template <typename T, typename U>
-    class Iteratorable<T, U>{
+    class Array<T, U>{
         public:
             std::vector<T> data;
-            Iteratorable() {}
+            Array() {}
             size_t do_pack_size() const {
                 size_t payload_size = 0;
                 for (auto iter = std::begin(data); iter != std::end(data); ++iter) {

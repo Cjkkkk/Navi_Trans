@@ -75,22 +75,22 @@ class B {
 
 class C {
     public:
-        Iteratorable<int32_t, INT_32> a;
+        Array<int32_t, INT_32> a;
         int32_t b;
         C() {}
         size_t do_pack_size() const {
-            size_t payload_size = pack_size<Iteratorable<int32_t, INT_32>, ARRAY>(a) + pack_size<int32_t, INT_32>(b);
+            size_t payload_size = pack_size<Array<int32_t, INT_32>, ARRAY>(a) + pack_size<int32_t, INT_32>(b);
             return payload_size;
         }
 
         size_t do_pack(uint8_t* buf) const {
-            size_t payload_size = pack<Iteratorable<int32_t, INT_32>, ARRAY>(buf, a);
+            size_t payload_size = pack<Array<int32_t, INT_32>, ARRAY>(buf, a);
             payload_size += pack<int32_t, INT_32>(buf + payload_size, b);
             return payload_size;
         }
 
         size_t do_unpack(uint8_t* buf, size_t& payload_size) {
-            size_t offset = unpack<Iteratorable<int32_t, INT_32>, ARRAY>(buf, a);
+            size_t offset = unpack<Array<int32_t, INT_32>, ARRAY>(buf, a);
             offset += unpack<int32_t, INT_32>(buf + offset, b);
             return payload_size;
         }
