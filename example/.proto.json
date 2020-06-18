@@ -34,8 +34,7 @@
             "field_number": 2
         },
         "c": {
-            "type": "MESSAGE",
-            "name": "B",
+            "type": "B",
             "property": "required",
             "field_number": 3
         }

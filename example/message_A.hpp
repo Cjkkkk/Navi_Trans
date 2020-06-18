@@ -2,6 +2,11 @@
 
 using namespace navi_trans;
 
+typedef enum Day{
+    Monday = 0,
+    Tuesday = 1,
+} Day;
+
 class B{
 public:
     B() {}

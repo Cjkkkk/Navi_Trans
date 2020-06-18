@@ -3,6 +3,7 @@
 #include "./pack.hpp"
 
 using namespace navi_trans;
+
 class A {
     // add key version
     public:
