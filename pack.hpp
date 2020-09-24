@@ -8,6 +8,8 @@
 #include <cstring>
 #include <iostream>
 #include "./types.hpp"
+#include "./traits.hpp"
+
 
 namespace navi_trans {
     template <typename U, typename T>

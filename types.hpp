@@ -80,27 +80,5 @@ namespace navi_trans {
         List_Of_Origin_Types \
         List_Of_Wire_Types
     #undef ENTRY
-
-    // define help traits
-    template <typename T>
-    struct is_zigzag {
-        static const bool value = false;
-    };
-
-    template <>
-    struct is_zigzag<SINT_32> {
-        static const bool value = true;
-    };
-
-    template <>
-    struct is_zigzag<SINT_64> {
-        static const bool value = true;
-    };
-
-
-    template <typename T>
-    struct wire_type_trait {
-        typedef typename T::wire_type wire_type;
-    };
 }
 #endif
