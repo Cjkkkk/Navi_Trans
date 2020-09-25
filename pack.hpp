@@ -89,7 +89,6 @@ namespace navi_trans {
 
     template <typename U, typename T>
     size_t do_unpack(uint8_t* buf, T& o_data, LENGTH_DELIMITED) {
-        // o_data = new typename std::remove_pointer<T>::type;
         size_t payload_size;
         do_unpack<FIXED_32>(buf, payload_size, BITS_32());
         o_data.do_unpack(buf + 4, payload_size);
