@@ -6,6 +6,13 @@ A simple template based tool for serializing structured data.
 * learn c++ traits
 * learn serialization
 
+# Design
+* use header only style.
+* use type trait to track all memebers of class (reflection), which does not require users to modify class definition to enable easy third party class serialization.
+* use tuple + partial specialization + recursive to expand varidic types.
+* use struct partial specialization + static method to achieve function partial specialization.
+* Fvck template.
+
 ## Support wire type
 * varint
 * 32 bits
