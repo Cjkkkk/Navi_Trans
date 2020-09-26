@@ -1,17 +1,7 @@
 #ifndef MEMBER_HPP
 #define MEMBER_HPP
 
-#include <exception>
-#include <sstream>
-#include <limits>
-#include <vector>
-#include <cstring>
-#include <iostream>
-
-#include "./pack.hpp"
-#include "./types.hpp"
-#include "./traits.hpp"
-
+#include <tuple>
 
 namespace navi_trans {
     template <typename T, T>
@@ -34,9 +24,6 @@ namespace navi_trans {
         using members = std::tuple<member...>; 
         enum: std::size_t {Count = sizeof...(member)};
     };
-
-    template <typename T>
-    struct MemberListTraits; 
 
 }
 

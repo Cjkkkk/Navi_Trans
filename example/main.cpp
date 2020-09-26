@@ -1,6 +1,5 @@
 #include <iostream>
 #include <pack.hpp>
-#include <member.hpp>
 
 
 using namespace navi_trans;

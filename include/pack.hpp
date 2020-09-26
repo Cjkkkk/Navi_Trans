@@ -4,7 +4,6 @@
 #include <exception>
 #include <sstream>
 #include <limits>
-#include <vector>
 #include <cstring>
 #include <iostream>
 #include <tuple>

@@ -48,5 +48,8 @@ namespace navi_trans {
     };
         List_Of_BITS_64_Types
     #undef ENTRY
+
+    template <typename T>
+    struct MemberListTraits; 
 }
 #endif
