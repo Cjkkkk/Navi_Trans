@@ -1,31 +1,30 @@
 # Navi_Trans
 A simple template based tool for serializing structured data.
 
-## motivation
+## Motivation
 * learn c++ template
 * learn c++ traits
 * learn serialization
 
-## support wire type
+## Support wire type
 * varint
 * 32 bits
 * 64 bits
-* length delimited (partial)
+* length delimited
 
-## compile
+## Message encoding format
 ```
-g++ compiler.cpp -o compiler
+|---------------|-----------------------------------
+| (4)           | (4)   (? )   | (4)   (?)    | ...
+| payload_size  | key1 value1  | key2 value2  | ...
+| --------------|------------------------------------
 ```
 
-## example
+## Example
 ```bash
-cd example
-../compiler .proto.json .
-g++ main.cpp -I ../ -o main
-./main
+cd example/
+g++ main.cpp -I ../include
 ```
 
 ## TODO
 * test
-* finish length delimited
-* compiler for generating class file
