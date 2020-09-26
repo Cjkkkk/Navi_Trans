@@ -7,6 +7,7 @@
 #include <cstring>
 #include <iostream>
 #include <tuple>
+#include <vector>
 #include "./types.hpp"
 #include "./traits.hpp"
 #include "./member.hpp"
@@ -154,7 +155,7 @@ namespace navi_trans {
     }
 
 
-    template <typename T, int index>
+    template <typename T, int index, typename _ = void>
     struct helper { 
         using m = typename std::tuple_element<index, typename MemberListTraits<T>::m_list::members>::type;
 
