@@ -155,7 +155,7 @@ namespace navi_trans {
     }
 
 
-    template <typename T, int index, typename _ = void>
+    template <typename T, int index = 0, typename _ = void>
     struct helper { 
         using m = typename std::tuple_element<index, typename MemberListTraits<T>::m_list::members>::type;
 
@@ -182,11 +182,12 @@ namespace navi_trans {
         }
     }; 
 
+
     template <typename T>
-    struct helper<T, MemberListTraits<T>::m_list::Count - 1>{
+    struct helper<T, MemberListTraits<T>::m_list::Count - 1, void>{
         const static int index = MemberListTraits<T>::m_list::Count - 1;
         using m = typename std::tuple_element<index, typename MemberListTraits<T>::m_list::members>::type; 
-
+        
         static inline uint32_t do_pack(uint8_t* buf, const T& data) {
             uint32_t payload_size = pack_key<typename m::type>(buf, index);
             payload_size += pack(buf + payload_size, m::const_resolve(data));
@@ -210,7 +211,7 @@ namespace navi_trans {
 
     template <typename T>
     uint32_t do_pack(uint8_t* buf, const T& data, LENGTH_DELIMITED) {
-        uint32_t payload_size = helper<T, 0>::do_pack(buf + 4, data);
+        uint32_t payload_size = helper<T>::do_pack(buf + 4, data);
         do_pack(buf, payload_size, BITS_32());
         return payload_size + 4;
     } 
@@ -219,7 +220,7 @@ namespace navi_trans {
     uint32_t do_unpack(const uint8_t* buf, T& data, LENGTH_DELIMITED) { 
         uint32_t payload_size;
         do_unpack(buf, payload_size, BITS_32());
-        uint32_t offset = helper<T, 0>::do_unpack(buf + 4, data);
+        uint32_t offset = helper<T>::do_unpack(buf + 4, data);
         if (payload_size != offset) {
             std::stringstream fmt;
             fmt << "expect " 
@@ -235,7 +236,7 @@ namespace navi_trans {
 
     template <typename T>
     uint32_t do_pack_size( const T& data, LENGTH_DELIMITED) { 
-        uint32_t payload_size = helper<T, 0>::do_pack_size(data);
+        uint32_t payload_size = helper<T>::do_pack_size(data);
         return payload_size + 4;
     } 
 
