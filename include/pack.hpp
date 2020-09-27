@@ -183,7 +183,7 @@ namespace navi_trans {
             return payload_size;
         }
     }; 
-
+    
 
     template <typename T>
     struct helper<T, MemberListTraits<T>::m_list::Count - 1, void>{

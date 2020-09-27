@@ -6,12 +6,12 @@
 
 namespace navi_trans {
     template <typename T>
-    inline uint32_t get_size(T& data) {
+    inline uint32_t size(T& data) {
         return data.size();
     }
 
     template <typename T, size_t N>
-    inline uint32_t get_size(T (&data)[N]) {
+    inline uint32_t size(T (&data)[N]) {
         return N;
     }
 
@@ -34,7 +34,7 @@ namespace navi_trans {
         > { 
         static inline uint32_t do_pack(uint8_t* buf, const T& data) {
             uint32_t payload_size = 0;
-            payload_size += pack(buf + payload_size, get_size(data));
+            payload_size += pack(buf + payload_size, size(data));
             for ( auto &v: data) {
                 payload_size += pack(buf + payload_size, v);
             }
@@ -69,7 +69,7 @@ namespace navi_trans {
         > { 
         static inline uint32_t do_pack(uint8_t* buf, const T& data) {
             uint32_t payload_size = 0;
-            payload_size += pack(buf + payload_size, get_size(data));
+            payload_size += pack(buf + payload_size, size(data));
             for ( auto &v: data) {
                 payload_size += pack(buf + payload_size, v);
             }
