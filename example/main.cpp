@@ -169,6 +169,25 @@ int main() {
     std::cout << data9 << "\n";
     delete[] buf9;
 
+    // vector
+    uint32_t data10[3];
+    data10[0] = 1;
+    data10[1] = 2;
+    data10[2] = 3;
+    ps = pack_size(data10);
+    std::cout << "pack_size: " << ps << "\n";
+    uint8_t* buf10 = new uint8_t[ps];
+    pack(buf10, data10);
+    data10[0] = 0;
+    data10[1] = 0;
+    data10[2] = 0;
+    // unpack
+    unpack(buf10, data10);
+    std::cout << data10[0] << "\n";
+    std::cout << data10[1] << "\n";
+    std::cout << data10[2] << "\n";
+    delete[] buf10;
+
     // generate_key
     uint8_t* buf7 = new uint8_t[1];
     uint32_t field_number = 4;

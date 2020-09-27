@@ -7,7 +7,6 @@
 #include <cstring>
 #include <iostream>
 #include <tuple>
-#include <vector>
 #include "./types.hpp"
 #include "./traits.hpp"
 #include "./member.hpp"
@@ -166,11 +165,14 @@ namespace navi_trans {
             return payload_size;
         }
 
-        static inline uint32_t do_unpack(const uint8_t* buf, T& data) { 
+        static inline uint32_t do_unpack(const uint8_t* buf, T& data, uint32_t payload_size) { 
             uint32_t field_number = 0;
-            uint32_t offset = unpack_key<typename m::type>(buf, field_number);
-            offset += unpack(buf + offset, m::resolve(data));
-            offset += helper<T, index + 1>::do_unpack(buf + offset, data);
+            uint32_t offset = 0;
+            if (offset < payload_size) {
+                offset = unpack_key<typename m::type>(buf, field_number);
+                offset += unpack(buf + offset, m::resolve(data));
+                offset += helper<T, index + 1>::do_unpack(buf + offset, data, payload_size - offset);
+            }
             return offset;
         }
 
@@ -194,10 +196,13 @@ namespace navi_trans {
             return payload_size;
         }
 
-        static inline uint32_t do_unpack(const uint8_t* buf, T& data) { 
+        static inline uint32_t do_unpack(const uint8_t* buf, T& data, uint32_t payload_size) { 
             uint32_t field_number = 0;
-            uint32_t offset = unpack_key<typename m::type>(buf, field_number);
-            offset += unpack(buf + offset, m::resolve(data));
+            uint32_t offset = 0;
+            if (offset < payload_size) {
+                offset = unpack_key<typename m::type>(buf, field_number);
+                offset += unpack(buf + offset, m::resolve(data));
+            }
             return offset;
         }
 
@@ -220,7 +225,7 @@ namespace navi_trans {
     uint32_t do_unpack(const uint8_t* buf, T& data, LENGTH_DELIMITED) { 
         uint32_t payload_size;
         do_unpack(buf, payload_size, BITS_32());
-        uint32_t offset = helper<T>::do_unpack(buf + 4, data);
+        uint32_t offset = helper<T>::do_unpack(buf + 4, data, payload_size);
         if (payload_size != offset) {
             std::stringstream fmt;
             fmt << "expect " 
