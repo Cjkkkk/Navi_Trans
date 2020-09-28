@@ -13,7 +13,7 @@ A simple template based tool for serializing structured data.
 * use struct partial specialization + static method to achieve function partial specialization.
 * Fvck template.
 
-## Support wire type
+## Support encoding type
 * varint
 * 32 bits
 * 64 bits
@@ -27,10 +27,40 @@ A simple template based tool for serializing structured data.
 | --------------|------------------------------------
 ```
 
+## supported type
+```
+Varint:
+int16_t 
+int8_t 
+uint16_t
+uint8_t 
+bool 
+char
+enum
+
+
+bits 64:
+uint64_t
+int64_t
+double
+
+
+bits 32:
+uint32_t
+int32_t
+float
+
+length delimited:
+user defined class
+array
+std::vector
+```
+
+
 ## Example
 ```bash
 cd example/
-g++ main.cpp -I ../include
+g++ simple.cpp -I ../include
 ```
 
 ## TODO

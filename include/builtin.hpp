@@ -54,6 +54,7 @@ namespace navi_trans {
 
         static inline uint32_t do_pack_size( const T& data) { 
             uint32_t payload_size = 0;
+            payload_size += pack_size(size(data));
             for ( auto &v: data) {
                 payload_size += pack_size(v);
             }
@@ -89,6 +90,7 @@ namespace navi_trans {
 
         static inline uint32_t do_pack_size( const T& data) { 
             uint32_t payload_size = 0;
+            payload_size += pack_size(size(data));
             for ( auto &v: data) {
                 payload_size += pack_size(v);
             }
