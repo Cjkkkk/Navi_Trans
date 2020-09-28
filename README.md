@@ -15,8 +15,7 @@ A simple template based tool for serializing structured data.
 
 ## Support encoding type
 * varint
-* 32 bits
-* 64 bits
+* fixed length
 * length delimited
 
 ## Message encoding format
@@ -29,26 +28,24 @@ A simple template based tool for serializing structured data.
 
 ## supported type
 ```
-Varint:
-int16_t 
-int8_t 
-uint16_t
-uint8_t 
-bool 
-char
+varint:
 enum
 
 
-bits 64:
-uint64_t
+fixed length:
+bool
+char
+int8_t
+uint8_t
+int16_t
+uint16_t
+int32_t
+uint32_t
 int64_t
+uint64_t
+float
 double
 
-
-bits 32:
-uint32_t
-int32_t
-float
 
 length delimited:
 user defined class

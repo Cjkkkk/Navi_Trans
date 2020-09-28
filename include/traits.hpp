@@ -42,17 +42,9 @@ namespace navi_trans {
     #define ENTRY(t) \
     template <>  \
     struct wire_type_trait<t> { \
-        using wire_type = BITS_32;\
+        using wire_type = FIXED_LENGTH;\
     };
-        List_Of_BITS_32_Types
-    #undef ENTRY
-
-    #define ENTRY(t) \
-    template <>  \
-    struct wire_type_trait<t> { \
-        using wire_type = BITS_64;\
-    };
-        List_Of_BITS_64_Types
+        List_Of_FIXED_LENGTH_Types
     #undef ENTRY
 
     template <typename T>

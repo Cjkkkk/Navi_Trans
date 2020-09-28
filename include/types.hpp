@@ -5,31 +5,29 @@
 
 #define List_Of_Wire_Types \
     ENTRY(VAR_INT, 0) \
-    ENTRY(BITS_64, 1) \
+    ENTRY(FIXED_LENGTH, 1) \
     ENTRY(LENGTH_DELIMITED, 2)\
-    ENTRY(BITS_32, 5)
 
 #define List_Of_VAR_INT_Types \
-    ENTRY(int16_t) \
-    ENTRY(int8_t) \
-    ENTRY(uint16_t)\
-    ENTRY(uint8_t) \
+    
+
+#define List_Of_FIXED_LENGTH_Types \
     ENTRY(bool) \
-    ENTRY(char)
-
-#define List_Of_BITS_64_Types \
-    ENTRY(uint64_t)\
-    ENTRY(int64_t)\
-    ENTRY(double)
-
-#define List_Of_BITS_32_Types \
-    ENTRY(uint32_t)\
+    ENTRY(char) \
+    ENTRY(int8_t) \
+    ENTRY(uint8_t) \
+    ENTRY(int16_t) \
+    ENTRY(uint16_t)\
     ENTRY(int32_t)\
-    ENTRY(float)
+    ENTRY(uint32_t)\
+    ENTRY(int64_t)\
+    ENTRY(uint64_t)\
+    ENTRY(float) \
+    ENTRY(double)
 
 #define List_Of_Origin_Types \
     List_Of_VAR_INT_Types \
-    List_Of_BITS_64_Types \
+    List_Of_FIXED_LENGTH_Types \
     List_Of_BITS_32_Types
 
 namespace navi_trans {

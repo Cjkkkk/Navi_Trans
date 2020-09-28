@@ -57,27 +57,17 @@ namespace navi_trans {
 
 
     template <typename T>
-    uint32_t do_pack(uint8_t* buf, const T& o_data, BITS_32) {
-        memcpy(buf, &o_data, 4);
-        return 4;
+    uint32_t do_unpack(const uint8_t* buf, T& o_data, FIXED_LENGTH) {
+        uint32_t size = sizeof(T);
+        memcpy(&o_data, buf, size);
+        return size;
     }
 
     template <typename T>
-    uint32_t do_unpack(const uint8_t* buf, T& o_data, BITS_32) {
-        memcpy(&o_data, buf, 4);
-        return 4;
-    }
-
-    template <typename T>
-    uint32_t do_pack(uint8_t* buf, const T& o_data, BITS_64) {
-        memcpy(buf, &o_data, 8);
-        return 8;
-    }
-
-    template <typename T>
-    uint32_t do_unpack(const uint8_t* buf, T& o_data, BITS_64) {
-        memcpy(&o_data, buf, 8);
-        return 8;
+    uint32_t do_pack(uint8_t* buf, const T& o_data, FIXED_LENGTH) {
+        uint32_t size = sizeof(T);
+        memcpy(buf, &o_data, size);
+        return size;
     }
 
     template <typename T>
@@ -91,13 +81,8 @@ namespace navi_trans {
     }
 
     template <typename T>
-    uint32_t do_pack_size( const T& o_data, BITS_32) {
-        return 4;
-    }
-
-    template <typename T>
-    uint32_t do_pack_size( const T& o_data, BITS_64) {
-        return 8;
+    uint32_t do_pack_size( const T& o_data, FIXED_LENGTH) {
+        return sizeof(T);
     }
 
     template <typename T>
@@ -217,14 +202,14 @@ namespace navi_trans {
     template <typename T>
     uint32_t do_pack(uint8_t* buf, const T& data, LENGTH_DELIMITED) {
         uint32_t payload_size = helper<T>::do_pack(buf + 4, data);
-        do_pack(buf, payload_size, BITS_32());
+        do_pack(buf, payload_size, FIXED_LENGTH());
         return payload_size + 4;
     } 
 
     template <typename T>
     uint32_t do_unpack(const uint8_t* buf, T& data, LENGTH_DELIMITED) { 
         uint32_t payload_size;
-        do_unpack(buf, payload_size, BITS_32());
+        do_unpack(buf, payload_size, FIXED_LENGTH());
         uint32_t offset = helper<T>::do_unpack(buf + 4, data, payload_size);
         if (payload_size != offset) {
             std::stringstream fmt;
