@@ -20,9 +20,15 @@ namespace navi_trans {
         static const bool value = true;
     };
 
-    template <typename T>
+    template <typename T, typename _ = void>
     struct wire_type_trait {
         using wire_type = LENGTH_DELIMITED;
+    };
+
+    // for enum
+    template <typename T>
+    struct wire_type_trait<T, typename std::enable_if<std::is_enum<T>::value>::type> { \
+        using wire_type = VAR_INT;\
     };
 
     #define ENTRY(t) \

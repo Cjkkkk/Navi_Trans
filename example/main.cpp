@@ -29,6 +29,12 @@ class C {
         C() {}
 };
 
+enum fruit {
+    apple = 1,
+    peach,
+    pear,
+};
+
 template<> struct navi_trans::MemberListTraits<B> { 
     using m_list = MemberList<Member<decltype(&B::a), &B::a>, Member<decltype(&B::b), &B::b>, Member<decltype(&B::c), &B::c>>; }; 
 
@@ -39,6 +45,7 @@ template<> struct navi_trans::MemberListTraits<C> {
     using m_list = MemberList<Member<decltype(&C::a), &C::a>, Member<decltype(&C::b), &C::b>>; }; 
 
 int main() {
+    // bit32
     int32_t data = -300;
     uint32_t ps = pack_size(data);
     std::cout << "pack_size: " << ps << "\n";
@@ -49,6 +56,7 @@ int main() {
     std::cout << data << "\n";
     delete[] buf;
 
+    // varint
     int16_t data1 = -320;
     ps = pack_size(data1);
     std::cout << "pack_size: " << ps << "\n";
@@ -59,7 +67,8 @@ int main() {
     std::cout << data1 << "\n";
     delete[] buf1;
 
-    float data2 = 3.2;
+    // enum
+    enum fruit data2 = pear;
     ps = pack_size(data2);
     std::cout << "pack_size: " << ps << "\n";
     uint8_t* buf2 = new uint8_t[ps];
@@ -69,6 +78,7 @@ int main() {
     std::cout << data2 << "\n";
     delete[] buf2;
 
+    // bit64
     double data3 = 3.4;
     ps = pack_size(data3);
     std::cout << "pack_size: " << ps << "\n";
@@ -103,7 +113,7 @@ int main() {
     data5.b = 2;
     data5.c = 3;
     data5.d = data4;
-     ps = pack_size(data5);
+    ps = pack_size(data5);
     std::cout << "pack_size: " << ps << "\n";
     uint8_t* buf5 = new uint8_t[ps];
     pack(buf5, data5);
