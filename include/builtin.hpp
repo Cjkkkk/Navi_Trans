@@ -17,10 +17,7 @@ namespace navi_trans {
 
     template <typename T>
     inline void resize(T& data, uint32_t count) {
-        // avoid down size
-        if (data.size() < count) {
-            data.resize(count);
-        }
+        data.resize(count);
     }
 
     template <typename T, size_t N>
